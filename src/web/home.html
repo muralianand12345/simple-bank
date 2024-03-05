@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/home.css">
+</head>
+
+<body>
+    <div class="bank-container">
+        <div class="bank-title">
+            <p>Bank of Valo</p>
+        </div>
+        <div class="bank-balance">
+            <p id="bank-balance"><span>Rs</span> 0</p>
+        </div>
+        <div class="account">
+            <input type="text" id="accountID" placeholder="Enter Account ID" />
+        </div>
+        <div class="bank-action">
+            <input type="number" id="amount" placeholder="Enter Cash" />
+            <button id="deposit" onclick="depositMoney()">Deposit</button>
+            <button id="withdraw" onclick="withdrawMoney()">Withdraw</button>
+        </div>
+    </div>
+    <script src="/js/home.js"></script>
+</body>
+
+</html>
