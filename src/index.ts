@@ -3,6 +3,11 @@ import * as path from "path";
 import * as express from "express";
 import * as dotenv from "dotenv";
 import * as dbRoutes from "./route/db";
+import * as loginRoutes from "./route/login";
+import * as session from "express-session";
+import * as uuid from "uuid";
+
+import { checkLogin } from "./function/auth";
 
 dotenv.config();
 const MONGO_URL: string | undefined = process.env.MONGO_URL;
@@ -21,14 +26,34 @@ mongoose.connect(MONGO_URL)
 
 const app = express();
 
+//cookie
+const secretKey = uuid.v4();
+app.use(session({
+    secret: secretKey,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}));
+
 app.use(express.json());
 app.use('/css', express.static(path.join(__dirname, './web/css')));
 app.use('/js', express.static(path.join(__dirname, './web/js')));
 
 app.use('/db', dbRoutes.router);
+app.use('/auth', loginRoutes.router);
 
-app.get('/', (req, res) => {
+app.get('/', checkLogin, (req, res) => {
     res.sendFile(path.join(__dirname, './web', 'home.html'));
+});
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, './web', 'login.html'));
+});
+
+app.get('/logout', (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/');
+    });
 });
 
 app.use((req, res) => {
@@ -36,5 +61,5 @@ app.use((req, res) => {
 });
 
 app.listen(parseInt(PORT), () => {
-    console.log('Server is running on port 3000');
+    console.log(`Server is running on port ${PORT}`);
 });
